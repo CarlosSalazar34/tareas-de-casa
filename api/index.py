@@ -1,5 +1,13 @@
+import os
+import sys
+
+# Vercel ejecuta la funcion con la base del proyecto (/var/task) en sys.path,
+# no el directorio de este fichero, asi que "models", "core" y "schemas" no se
+# encuentran. En local si funcionan porque uvicorn arranca dentro de api/.
+# Anadir este directorio explicitamente cubre los dos entornos.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from fastapi import FastAPI, Body, Depends, HTTPException, status
-import models
 from core.database import engine, get_session
 from models.tarea import Tarea
 from sqlmodel import SQLModel, Session, select

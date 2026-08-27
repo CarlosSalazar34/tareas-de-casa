@@ -2,8 +2,9 @@ from sqlmodel import create_engine, Session
 from dotenv import load_dotenv
 import os
 
-# En local lee api/.env; en Vercel las variables ya vienen del entorno.
-load_dotenv()
+# En local lee api/.env sin depender de desde donde se lance el proceso;
+# en Vercel las variables ya vienen del entorno y no hay fichero que leer.
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"))
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
