@@ -7,7 +7,7 @@ from schemas.tarea import CreateTaskRequests
 import uuid
 from models.tarea import StatusTarea
 
-app = FastAPI(openapi_prefix="/api")
+app = FastAPI(root_path="/api")
 SQLModel.metadata.create_all(engine)
 
 @app.get("/")
