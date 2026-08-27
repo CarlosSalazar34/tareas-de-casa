@@ -1,0 +1,33 @@
+{
+  // --- Python (api/) ---
+  "python.defaultInterpreterPath": "${workspaceFolder}/api/venv/bin/python",
+  "python.analysis.extraPaths": ["${workspaceFolder}/api"],
+  "python.analysis.autoSearchPaths": true,
+  "python.terminal.activateEnvironment": true,
+
+  // --- CSS / Tailwind v4 ---
+  // Evita "Unknown at rule @import/@theme/@apply" en globals.css
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  // --- TypeScript / Next.js ---
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // --- Ruido del explorador / búsquedas ---
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/api/venv": true,
+    "**/pnpm-lock.yaml": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/api/venv/**": true
+  }
+}

@@ -1,26 +1,132 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------------------------------------------------------------
+   Sistema visual estilo iOS + Liquid Glass, en blanco y negro.
+   Sin color de acento: el contraste y el vidrio hacen el trabajo.
+   --------------------------------------------------------------- */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  --label: #000000;
+  --label-secondary: rgba(60, 60, 67, 0.6);
+  --label-tertiary: rgba(60, 60, 67, 0.28);
+
+  /* Acento monocromo: invierte respecto al fondo */
+  --accent: #000000;
+  --accent-contrast: #ffffff;
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-highlight: rgba(255, 255, 255, 0.95);
+  --glass-shadow: rgba(0, 0, 0, 0.12);
+  --separator: rgba(60, 60, 67, 0.16);
+
+  --fill-disabled: #d1d1d6;
+  --canvas: #f2f2f7;
+  --wash-1: rgba(0, 0, 0, 0.1);
+  --wash-2: rgba(0, 0, 0, 0.05);
+  --wash-3: rgba(255, 255, 255, 0.9);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --label: #ffffff;
+    --label-secondary: rgba(235, 235, 245, 0.6);
+    --label-tertiary: rgba(235, 235, 245, 0.3);
+
+    --accent: #ffffff;
+    --accent-contrast: #000000;
+
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-bg-strong: rgba(28, 28, 30, 0.86);
+    --glass-border: rgba(255, 255, 255, 0.16);
+    --glass-highlight: rgba(255, 255, 255, 0.28);
+    --glass-shadow: rgba(0, 0, 0, 0.6);
+    --separator: rgba(235, 235, 245, 0.12);
+
+    --fill-disabled: #2c2c2e;
+    --canvas: #000000;
+    --wash-1: rgba(255, 255, 255, 0.14);
+    --wash-2: rgba(255, 255, 255, 0.06);
+    --wash-3: rgba(255, 255, 255, 0.09);
   }
 }
 
+@theme inline {
+  --color-label: var(--label);
+  --color-label-secondary: var(--label-secondary);
+  --color-label-tertiary: var(--label-tertiary);
+  --color-accent: var(--accent);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-separator: var(--separator);
+  --color-fill-disabled: var(--fill-disabled);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  background: var(--canvas);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--label);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+}
+
+/* Wallpaper monocromo: degradados suaves que el vidrio deforma */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background:
+    radial-gradient(45% 45% at 12% 8%, var(--wash-1) 0%, transparent 70%),
+    radial-gradient(50% 50% at 90% 20%, var(--wash-3) 0%, transparent 70%),
+    radial-gradient(60% 60% at 50% 95%, var(--wash-2) 0%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+}
+
+/* Vidrio base: blur + borde iluminado arriba */
+@utility glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-highlight),
+    0 8px 32px -8px var(--glass-shadow);
+}
+
+/* Variante mas densa para capas encima de otro vidrio */
+@utility glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-highlight),
+    0 20px 60px -12px var(--glass-shadow);
+}
+
+/* Hairline de 1px como los separadores de UITableView */
+@utility ios-separator {
+  box-shadow: inset 0 -0.5px 0 0 var(--separator);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
