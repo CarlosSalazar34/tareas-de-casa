@@ -1,13 +1,16 @@
 "use client";
 import { motion } from "framer-motion";
+import type { Task } from "@/utils/api";
 
 interface TaskItemProps {
-  title: string;
-  isDone: boolean;
+  task: Task;
   onToggle: () => void;
+  onDelete: () => void;
 }
 
-export const TaskItem = ({ title, isDone, onToggle }: TaskItemProps) => {
+export const TaskItem = ({ task, onToggle, onDelete }: TaskItemProps) => {
+  const isDone = task.status === "completada";
+
   return (
     <motion.li
       layout
@@ -15,7 +18,7 @@ export const TaskItem = ({ title, isDone, onToggle }: TaskItemProps) => {
       animate={{ opacity: 1, height: "auto" }}
       exit={{ opacity: 0, height: 0 }}
       transition={{ type: "spring", stiffness: 420, damping: 38 }}
-      className="overflow-hidden last:shadow-none ios-separator"
+      className="ios-separator group flex items-center overflow-hidden last:shadow-none transition-colors hover:bg-white/20 dark:hover:bg-white/5"
     >
       <motion.button
         type="button"
@@ -23,12 +26,12 @@ export const TaskItem = ({ title, isDone, onToggle }: TaskItemProps) => {
         aria-pressed={isDone}
         whileTap={{ scale: 0.985 }}
         transition={{ type: "spring", stiffness: 600, damping: 30 }}
-        className="group flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-white/20 dark:hover:bg-white/5"
+        className="flex min-w-0 flex-1 items-center gap-3 py-3.5 pl-4 pr-2 text-left"
       >
         {/* Circulo de completado, como en Recordatorios */}
         <span
           aria-hidden="true"
-          className={`relative flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full border-[1.5px] transition-all duration-200 ${
+          className={`relative flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-[1.5px] transition-all duration-200 ${
             isDone
               ? "border-accent bg-accent"
               : "border-label-tertiary group-hover:border-label-secondary"
@@ -59,8 +62,27 @@ export const TaskItem = ({ title, isDone, onToggle }: TaskItemProps) => {
               : "text-label"
           }`}
         >
-          {title}
+          {task.title}
         </span>
+      </motion.button>
+
+      <motion.button
+        type="button"
+        onClick={onDelete}
+        aria-label={`Eliminar ${task.title}`}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 600, damping: 30 }}
+        className="mr-3 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-label-tertiary transition-colors hover:bg-red-500/15 hover:text-red-500"
+      >
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className="h-4.5 w-4.5">
+          <path
+            d="M5 7h14M10 7V5h4v2m-7 0 .8 12a1 1 0 0 0 1 .9h6.4a1 1 0 0 0 1-.9L17 7"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </motion.button>
     </motion.li>
   );

@@ -1,31 +1,49 @@
+export type TaskStatus = "por_hacer" | "completada";
+
 export interface Task {
-    title: string;
-    status: string;
+  id: string;
+  title: string;
+  status: TaskStatus;
 }
 
-export const createTask = async (task: Task): Promise<any>=> { 
-    const response = await fetch("/api/tasks/create",
-        {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({...task})
-        }
-    )
-    return await response.json();
-}
+/** Lo que la API necesita para crear una tarea (el id lo genera el backend). */
+export type NewTask = Omit<Task, "id">;
 
-export const updateTask = async (taskId: string, estado = "completada"): Promise<any> => { 
-    const response = await fetch("/api/tasks/complete", {
-        method: "PATCH",
-        headers: { 
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ id: taskId, estado })
-    })
-    if (!response.ok) {
-        throw new Error("No se pudo actualizar la tarea.")
-    }
-    return await response.json();
-}
+/**
+ * Todas las llamadas pasan por aqui: mismo header, mismo manejo de error.
+ * Lanza si la respuesta no es 2xx para que el hook pueda revertir la UI.
+ */
+const request = async <T>(path: string, init: RequestInit = {}): Promise<T> => {
+  const response = await fetch(`/api${path}`, {
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  });
+
+  if (!response.ok) {
+    throw new Error(`La peticion a ${path} fallo (${response.status}).`);
+  }
+
+  return response.json() as Promise<T>;
+};
+
+export const fetchTasks = () => request<Task[]>("/tasks");
+
+export const createTask = (task: NewTask) =>
+  request<unknown>("/tasks/create", {
+    method: "POST",
+    body: JSON.stringify(task),
+  });
+
+export const updateTaskStatus = (id: string, estado: TaskStatus) =>
+  request<unknown>("/tasks/complete", {
+    method: "PATCH",
+    body: JSON.stringify({ id, estado }),
+  });
+
+export const deleteTask = (id: string) =>
+  request<unknown>("/tasks/delete", {
+    method: "DELETE",
+    body: JSON.stringify({ id }),
+  });
+
+export const isTaskDone = (task: Task) => task.status === "completada";

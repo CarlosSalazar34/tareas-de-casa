@@ -9,7 +9,7 @@ export const Dialog = ({ children }: {children: React.ReactNode}) => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
+                <div className="fixed inset-0 z-50 flex items-center justify-center sm:items-center">
                     <motion.div
                         className="absolute inset-0 bg-black/25 backdrop-blur-[2px]"
                         initial={{ opacity: 0 }}
@@ -23,7 +23,7 @@ export const Dialog = ({ children }: {children: React.ReactNode}) => {
                         aria-modal="true"
                         aria-label="Dialogo"
                         tabIndex={-1}
-                        className="glass-strong relative w-full max-w-md rounded-t-[28px] px-5 pb-8 pt-2.5 text-label sm:m-4 sm:rounded-[28px] sm:pb-6"
+                        className="glass-strong relative w-full max-w-md rounded-[28px] px-5 pb-8 pt-2.5 text-label sm:m-4 sm:rounded-[28px] sm:pb-6"
                         style={{ paddingBottom: "max(2rem, env(safe-area-inset-bottom))" }}
                         initial={{ opacity: 0, y: 40, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}

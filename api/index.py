@@ -38,7 +38,7 @@ async def create_task(tarea: CreateTaskRequests,
         }
     except Exception as e:
         return {
-            "error": f"e"
+            "error": f"{e}"
         }
 
 @app.get("/tasks", status_code=status.HTTP_200_OK)
@@ -68,4 +68,18 @@ async def complete_task(id: uuid.UUID = Body(..., embed=True),
     return {
         "status": "tarea actualizada. ✅",
         "tarea": task
+    }
+
+@app.delete("/tasks/delete", status_code=status.HTTP_200_OK)
+async def delete_task(id: uuid.UUID = Body(..., embed=True),
+                      session: Session = Depends(get_session)):
+    task = session.get(Tarea, id)
+    if task is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Tarea no encontrada.")
+
+    session.delete(task)
+    session.commit()
+    return {
+        "message": "tarea eliminada. ✅"
     }
